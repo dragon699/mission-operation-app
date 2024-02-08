@@ -11,8 +11,8 @@
 # by creating a new user with programmatic access and obtaining;
 # these from there;
 AWS_PARAMETERS=(
-    AWS_ACCESS_KEY_ID=AKIAYF74FDPHPSPOFSJU
-    AWS_SECRET_ACCESS_KEY=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
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
 )
 
 
@@ -21,7 +21,7 @@ AWS_PARAMETERS=(
 PARAMETERS=(
     region=eu-west-1
     db_username=postgres
-    db_password=12345678
+    db_password=
     db_name=satellites
     db_port=5432
     app_port=8080
