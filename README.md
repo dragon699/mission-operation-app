@@ -35,8 +35,11 @@ Currently tested on Ubuntu only.
 ## ToDo:
 - Currently, AppRunner supports 2 ways of wiring the application to other services (outbound) - Public access and a VPC Connector. By having a VPC connector in place, you're essentially telling it to route all outbound traffic through a VPC and your VPC is responsible for making sure it can send outgoing traffic to the internet. In that scenario, the requirement is to have only private subnets linked to the connector, and you would:
   - Create a an endpoint in the VPC to allow AppRunner to access other AWS resources (like S3 and RDS) without an internet access.
-  - Create NAT gateways inside the subnets
+  - Create NAT gateways inside the subnets.
+
 However, unfortunately I wasn't really able to achieve the expected results in both ways, so I left the RDS database access open, relying only on the security group protection. The errors I were receiving were related to `temporarly fail of resolution DNS names` so I have decided to leave it like that for now. Because of the above issues i've stumbled upon, I had to also create an Internet Gateway and a Route table - they serve as a workaround. The RDS instance requires them when set as *publicly accessible*.
 In a perfect case scenario, the subnets would be private and the VPC endpoints would serve as *connectors* (VPC connector) to route traffic from AppRunner to S3 and RDS. 
+
 - The `DB_PASSWORD` environment variable that is assigned to the AppRunner service could use some extra protection, by putting it in the AWS SSM parameters store. Currently, it's exposed as a normal ENV var.
+
 - The lambda inside `scripts/lambda.py` works, but could use an extra - an API gateway, so It could be accessed by a browser. Currently, I don't think this is a necessary requirement given the task requirements.
