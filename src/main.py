@@ -1,6 +1,4 @@
 from config import *
-
-from os import environ as env
 from flask import Flask, request, jsonify
 import psycopg2, boto3, json
 
@@ -11,7 +9,6 @@ web_app = Flask(__name__)
 class DB_Communicator:
     def __init__(self):
         self.config = db_config
-        
         self.connect()
 
 
@@ -23,6 +20,29 @@ class DB_Communicator:
             user = self.config['db_user'],
             password = self.config['db_passwd']
         )
+
+        runner = self.connection.cursor()
+        runner.execute(
+            '''
+                CREATE TABLE IF NOT EXISTS {} (
+                    id SERIAL PRIMARY KEY,
+                    satellite_id VARCHAR(50),
+                    timestamp TIMESTAMP,
+                    longitude DECIMAL(9, 6),
+                    latitude DECIMAL(8, 6),
+                    altitude DECIMAL(10, 2),
+                    temperature DECIMAL(5, 2),
+                    pressure DECIMAL(7, 2),
+                    humidity DECIMAL(5, 2),
+                    solar_irradiance DECIMAL(8, 2)
+                );
+            '''.format(self.config['db_satellites_table'])
+        )
+
+        self.connection.commit()
+        runner.close()
+
+        return True
 
 
     def get_satellites_data(self):
@@ -41,12 +61,9 @@ class DB_Communicator:
         runner = self.connection.cursor()
         runner.execute(
             '''
-            INSERT INTO {} (satellite_id, timestamp, longitude, latitude, altitude, temperature, pressure, humidity, solar_irradiance)
-            VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
-            '''.format(
-                self.config['db_satellites_table'],
-                *data
-            )
+                INSERT INTO {} (satellite_id, timestamp, longitude, latitude, altitude, temperature, pressure, humidity, solar_irradiance)
+                VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')
+            '''.format(self.config['db_satellites_table'], *data)
         )
 
         self.connection.commit()

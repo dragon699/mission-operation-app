@@ -12,4 +12,4 @@ db_config = {
 }
 
 s3_bucket_name = env.get('S3_BUCKET_NAME', 'satellites-api-data')
-s3_satellites_file = env.get('S3_SATELLITES_FILE_NAME', 'telemetry_data.json')
+s3_satellites_file = env.get('S3_BUCKET_SATELLITES_FILE_NAME', 'telemetry_data.json')
